@@ -21,9 +21,9 @@ import numpy as np
 
 # Librerias para graficar en el ploter
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
+from matplotlib.backends.backend_qt4agg import NavigationToolbar2QTAgg as NavigationToolbar
 from matplotlib.figure import Figure
 
-import UniversalLibrary as UL
 
 # Clase que configura parte de las graficas de datos -----------------------------
 
@@ -56,139 +56,99 @@ class canvas( FigureCanvas ):
 class Test_Resistividad ( QtCore.QThread ):
     def __init__ ( self ):
         QtCore.QThread.__init__( self )
-
         self.exiting = False
+    def check_connections(self,
+                          lock_in,
+                          temp):
+        
+        return True
+        
     def test ( self,
                outfile,
-               lock_in_sensitivity,
-               multimeter,
-               usb_temp_ai_temp_channels,
-               usb_temp_ai_volt_channels,
                data_per_second,
-               BoardNum,
-               s_port ):
-        import Multimetros
-        if multimeter == 'AG34410A':
-
-            self.multimeter=Multimetros.AG34410A()
-            self.multimeter.write( '*RST' )
+               lock_in,
+               temp ):
+        
+        if temp[0] == 'AG34410A':
+            import Multimetros
+            self.temp_adq=Multimetros.AG34410A()
+            self.temp_adq.write( '*RST' )
             time.sleep( 0.1 )
-            self.multimeter.write( 'CONF:VOLT:DC AUTO' )
+            self.temp_adq.write( 'CONF:VOLT:DC AUTO' )
             time.sleep( 0.5 )
             self.time_stamp = 0
-            self.delay = 1. / ( float ( data_per_second ) * ( 1 + len ( usb_temp_ai_volt_channels ) ) )
-            
-        elif multimeter == 'AG34401A':
-
-            self.multimeter= Multimetros.AG34401A(str(s_port))
+        elif temp[0] == 'AG34401A':
+            import Multimetros
+            self.temp_adq= Multimetros.AG34401A(str(temp[1]))
             self.time_stamp = 0
-            self.delay = 1. / ( float ( data_per_second ) * ( 1 + len ( usb_temp_ai_volt_channels ) ) )
+
+        if lock_in[0] == 'LOCK-IN SR530':
             
-        else:
-            self.multimeter = multimeter
-            self.delay = 1. / ( float ( data_per_second ) * ( len ( usb_temp_ai_temp_channels ) + len ( usb_temp_ai_volt_channels ) ) )
+            from lockin import SR530
+            self.lock_in_adq = SR530()
+            print 'Conectando .... '+str(lock_in[1])
+            print self.lock_in_adq.getSerialConn(lock_in[1])
             
         self.refresh = data_per_second
-        self.BoardNum = BoardNum
-        self.TempChannels = usb_temp_ai_temp_channels
-        self.VoltChannels = usb_temp_ai_volt_channels
         self.savedata = False
         self.outfile = outfile
         self.zero_time=0
-        self.lock_in_sensitivity=lock_in_sensitivity
         self.zero_lockin=False
         self.zero_lock_in = 0
         self.start()
 
     def run ( self ):
         first = True
-        TempVal = 0.0
-        VoltVal = 0.0
+
         self.zero_time = time.time()
-        count =0
-##        print "en run"
+        #print "en run"
         while not self.exiting:
-           # print "en bucle"
-            #===================================================================
-            # Lectura del dispositivo USB-TEMP-IA
-            #===================================================================
-
-            TempRead = []
-            VoltRead = []
-            if self.multimeter == False:
-##                print "Entre en temp channels"
-                for c in self.TempChannels:
-##                    print "En TempChanesls USB TEM IA"
-                    TempRead.append ( UL.cbTIn( self.BoardNum,
-                                    c,
-                                    UL.CELSIUS ,
-                                    TempVal,
-                                    UL.FILTER ) )
-                    time.sleep( self.delay )
-
-            for c in self.VoltChannels:
-                #print "En VoltChanesls USB TEM IA canal:"+str(c)
-                VoltRead.append ( UL.cbVIn( self.BoardNum,
-                                            c,
-                                            UL.cbGetConfig( UL.BOARDINFO,
-                                                            self.BoardNum,
-                                                            c,
-                                                            UL.BIRANGE,
-                                                            ConfigVal = 0 ),
-                                            VoltVal,
-                                            Option = None ) )
-                time.sleep( self.delay )
-            #==================================================================
             
-            if self.multimeter:
-                if self.multimeter.name=='AG34410A':
-                    self.multimeter.write( 'DISP:WIND2:TEXT "Midiendo ..."' )
-                    self.multimeter.write( 'READ?' )
-                if self.multimeter.name=='AG34401A':
-                    self.multimeter.write( 'DISPLAY:TEXT "Midiendo ..."\n' )
-                    self.multimeter.write( 'READ?\n' )
-                temp_data = float ( self.multimeter.read() ) * 1000
-                print "Valor Multimetro * 1000: "+str(temp_data)
-    #           Pasar de milivoltios a gracdos centigrado el valor leido por el multimetro
-                # Polinomio para rango intermedio  -272 a 150 C
+            if self.temp_adq.name=='AG34410A':
+                self.temp_adq.write( 'DISP:WIND2:TEXT "Midiendo ..."' )
+                self.temp_adq.write( 'READ?' )
+            if self.temp_adq.name=='AG34401A':
+                self.temp_adq.write( 'DISPLAY:TEXT "Midiendo ..."\n' )
+                self.temp_adq.write( 'READ?\n' )
+            temp_data = float ( self.temp_adq.read()) * 1000
+            #print "Valor Multimetro * 1000: "+str(temp_data)
+#           Pasar de milivoltios a gracdos centigrado el valor leido por el multimetro
+            # Polinomio para rango intermedio  -272 a 150 C
 
-                if temp_data < 2: 
-                    
-                    Y = 25.39459 * temp_data 
-                    Y-= 0.44494 * temp_data ** 2 
-                    Y+= 0.05652 * temp_data ** 3 
-                    Y-= 0.00412 * temp_data ** 4 
-                    Y+= 0.0011 * temp_data ** 5 
-                    Y-= 1.39776E-4 * temp_data ** 6 
-                    Y+= 4.40583E-6 * temp_data ** 7 
-                    Y+= 7.709E-8 * temp_data ** 8
-                    
-                #Polinomio para rango positivo 0 a 500 C     
-                if temp_data >=2 :
-                    
-                    Y = 25.26032 * temp_data
-                    Y-= 0.57128 * temp_data ** 2
-                    Y+= 0.13393 * temp_data ** 3
-                    Y-= 0.01411 * temp_data ** 4
-                    Y+= 7.7329E-4 * temp_data ** 5
-                    Y-= 2.32438E-5 * temp_data ** 6
-                    Y+= 3.64924E-7 * temp_data ** 7
-                    Y-= 2.34283E-9 * temp_data ** 8
-                    
-                temp_sample=Y
+            if temp_data < 2: 
                 
+                Y = 25.39459 * temp_data 
+                Y-= 0.44494 * temp_data ** 2 
+                Y+= 0.05652 * temp_data ** 3 
+                Y-= 0.00412 * temp_data ** 4 
+                Y+= 0.0011 * temp_data ** 5 
+                Y-= 1.39776E-4 * temp_data ** 6 
+                Y+= 4.40583E-6 * temp_data ** 7 
+                Y+= 7.709E-8 * temp_data ** 8
                 
-            else:
-                #  temp_down = TempRead[0]
-                temp_sample = TempRead[0]
-                #  temp_up = TempRead[2]
+            #Polinomio para rango positivo 0 a 500 C     
+            if temp_data >=2 :
+                
+                Y = 25.26032 * temp_data
+                Y-= 0.57128 * temp_data ** 2
+                Y+= 0.13393 * temp_data ** 3
+                Y-= 0.01411 * temp_data ** 4
+                Y+= 7.7329E-4 * temp_data ** 5
+                Y-= 2.32438E-5 * temp_data ** 6
+                Y+= 3.64924E-7 * temp_data ** 7
+                Y-= 2.34283E-9 * temp_data ** 8
+                
+            temp_sample=Y
                 
             #======================================================================
             # Valor del Lock In
             #======================================================================
-
-            Lock_In = VoltRead[0]*self.lock_in_sensitivity/10
-
+            #print 'Leyendo Lock In...'
+            self.lock_in_adq.write('Q1')
+            
+            Lock_In = self.lock_in_adq.read()
+            #print 'Leyendo Sensibilidad'
+            Lock_In_sensitivity= self.lock_in_adq.getSensitivity()
             #======================================================================
 
             timestamp = time.time() - self.zero_time
@@ -197,59 +157,62 @@ class Test_Resistividad ( QtCore.QThread ):
 
             data = [timestamp, 
                     temp_sample, 
-                    Lock_In]
+                    Lock_In,
+                    Lock_In_sensitivity]
 
             #===================================================================
             # Guardando datos en disco duro
             #===================================================================
-            if self.savedata:
-                
+            if self.savedata: 
                 if first:
                     fsock = open( self.outfile, 'w' )
+                    self.emit( QtCore.SIGNAL ( "LOCK_INCFG(PyQt_PyObject)" ), self.lock_in_adq.getStatus())
                     first = False
                 else:
                     fsock = open( self.outfile, 'a' )
                     
-                if self.multimeter:
-                    if self.multimeter.name=='AG34410A':
-                        self.multimeter.write( 'DISP:WIND2:TEXT "Guardando..."' )
-                    if self.multimeter.name=='AG34401A':
-                        self.multimeter.write( 'DISPLAY:TEXT "Guardando..."\n' )
+                if self.temp_adq:
+                    if self.temp_adq.name=='AG34410A':
+                        self.temp_adq.write( 'DISP:WIND2:TEXT "Guardando..."' )
+                    if self.temp_adq.name=='AG34401A':
+                        self.temp_adq.write( 'DISPLAY:TEXT "Guardando..."\n' )
                                             
                 line = str ( data[0] ) + '\t' 
-                line+= str ( data[1] ) + '\t' 
-                line+= str ( data[2] ) + '\n' 
+                line+= str ( data[1] ) + '\t'
+                line+= str ( data[2] ) + '\t'  
+                #line+= str ( data[3] ) + '\n'
                 
                 fsock.write( line )
                 fsock.close()
             #====================================================================
             else:
-                
                 tempfsock = open( 'tempdata', 'w' )
-                
                 line = str ( data[0] ) + '\t' 
-                line+= str ( data[1] ) + '\t' 
-                line+= str ( data[2] ) + '\n' 
-                
+                line+= str ( data[1] ) + '\t'
+                line+= str ( data[2] ) + '\t'  
+                #line+= str ( data[3] ) + '\n' 
+                 
                 tempfsock.write( line )
-                tempfsock.close()            
-            if count == self.refresh:
+                tempfsock.close()           
+                 
+            self.emit( QtCore.SIGNAL ( "ready(PyQt_PyObject)" ), data[3] )
+            time.sleep(1/self.refresh)
+            
+        if self.temp_adq:
+            if self.temp_adq.name =='AG34410A':
+                self.temp_adq.write( '*CLS' )
+            if self.temp_adq.name =='AG34401A':
+                self.temp_adq.write( '*CLS\n' )
                 
-                self.emit( QtCore.SIGNAL ( "ready(PyQt_PyObject)" ), data )
-                count = 0
-            count+=1
-        if self.multimeter:
-            if self.multimeter.name =='AG34410A':
-                self.multimeter.write( '*CLS' )
-            if self.multimeter.name =='AG34401A':
-                self.multimeter.write( '*CLS\n' )
         tempfsock.close() 
         fsock.close()
+
         self.exit()
 
     def __del__( self ):
         self.exiting = True
-        self.ser.close()
+        self.temp_adq.__del__()
+        self.lock_in_adq.__del__()
         self.wait()
         
 class Main( QtGui.QMainWindow ):
@@ -266,7 +229,9 @@ class Main( QtGui.QMainWindow ):
         # Inicializando base de ploteo para mainplot--------------------------------
         self.vbl_main = QtGui.QVBoxLayout( self.gb_mainplot )
         self.maincanvas = canvas( self.gb_mainplot )
+        self.mainbar=NavigationToolbar(self.maincanvas,self.gb_mainplot)
         self.vbl_main.insertWidget( 0, self.maincanvas )
+        self.vbl_main.insertWidget( 1, self.mainbar) 
         #--------------------------------------------------------------------------
         # Inicializando base de ploteo para auxplot_1------------------------------
         self.vbl_aux_1 = QtGui.QVBoxLayout( self.gb_auxplot_1 )
@@ -289,39 +254,28 @@ class Main( QtGui.QMainWindow ):
         self.connect(self.resistividad,
                      QtCore.SIGNAL("ready(PyQt_PyObject)" ),
                      self.show_data)
-
+        self.connect(self.resistividad,
+                     QtCore.SIGNAL("LOCK_INCFG(PyQt_PyObject)" ),
+                     self.save_lock_in_config)
         #=======================================================================
-
-        ports=scan_serial.scan(30, False)
+        ports = scan_serial.scan(30, True)
+        print ports
         for i in range(self.cbx_temperature_sample_channel.count()):
             self.cbx_temperature_sample_channel.removeItem(i)
         for port in ports:
             self.cbx_temperature_sample_channel.addItem(port[1])
         self.cbx_temperature_sample_input.activated.connect(self.on_cbx_temperature_sample_input_activated)
+        
+        for i in range(self.cbx_lock_in_channel.count()):
+            self.cbx_lock_in_channel.removeItem(i)
+        for port in ports:
+            self.cbx_lock_in_channel.addItem(port[1])
+        self.cbx_lock_in_input.activated.connect(self.on_cbx_lock_in_input_activated)
     #===========================================================================================
-    # Las siguientes 4 funciones son las encargadas de ajustar la escala de la grafica principal
-    # por medio de los controles proporcionados al usuario
     
     @QtCore.pyqtSlot()
-    def on_sb_xmin_valueChanged( self ):
-        self.maincanvas.axes.set_xlim( self.sb_xmin.value(), self.sb_xmax.value() )
-        self.maincanvas.draw()
-        
-    @QtCore.pyqtSlot( int )
-    def on_sb_xmax_valueChanged( self ):
-        self.maincanvas.axes.set_xlim( self.sb_xmin.value(), self.sb_xmax.value() )
-        self.maincanvas.draw()
-        
-    @QtCore.pyqtSlot( int )
-    def on_sb_ymin_valueChanged( self ):
-        self.maincanvas.axes.set_ylim( self.sb_ymin.value(), self.sb_ymax.value() )
-        self.maincanvas.draw()
-        
-    @QtCore.pyqtSlot( int )
-    def on_sb_ymax_valueChanged( self ):
-        self.maincanvas.axes.set_ylim( self.sb_ymin.value(), self.sb_ymax.value() )
-        self.maincanvas.draw()    
-    #============================================================================================
+    def save_lock_in_config(self, lock_in_cfg):
+        self.ptx_footer.setPlainText(lock_in_cfg)
 
 #===============================================================================
 # Funciones de los botones accionados por el usuario para controlar el inicio y el final
@@ -329,9 +283,11 @@ class Main( QtGui.QMainWindow ):
 #===============================================================================
     @QtCore.pyqtSlot()
     def on_pb_start_clicked ( self ):
-        self.Resistividad_test()
-        self.pb_start_save_data.setEnabled(True)
-    
+        if self.pre_run_check():
+            self.Resistividad_test()
+        else:
+            self.pb_start.setEnabled( True )
+            
     @QtCore.pyqtSlot()
     def on_pb_end_clicked ( self ):
         self.resistividad.exiting = True
@@ -416,69 +372,72 @@ class Main( QtGui.QMainWindow ):
         if self.cbx_temperature_sample_input.currentText()=='AG34410A':
             for i in range(self.cbx_temperature_sample_channel.count()):
                 self.cbx_temperature_sample_channel.removeItem(i)
-        
-        if self.cbx_temperature_sample_input.currentText()=='USB TEMP AI':
-            for i in range(self.cbx_temperature_sample_channel.count()):
-                self.cbx_temperature_sample_channel.removeItem(i)
-            for i in range(0,4):
-                self.cbx_temperature_sample_channel.addItem(str (i), str(i))
                 
-    def Resistividad_test ( self ):
-        # inicializar archivos leer configuraciones inicializar puerto serie
-        valid = False
-          
-        if self.le_output_file_path.text() != '':
-            valid = True
+    @QtCore.pyqtSlot()
+    def on_cbx_lock_in_input_activated(self):
+        if self.cbx_lock_in_input.currentText()=='LOCK-IN SR530':
+            ports=scan_serial.scan(30, False)
+            for i in range(self.cbx_lock_in_channel.count()):
+                self.cbx_lock_in_channel.removeItem(i)
+            for port in ports:
+                self.cbx_lock_in_channel.addItem(port[1])
+        if self.cbx_lock_in_input.currentText()=='AG34401A':
+            ports=scan_serial.scan(30, False)
+            for i in range(self.cbx_lock_in_channel.count()):
+                self.cbx_lock_in_channel.removeItem(i)
+            for port in ports:
+                self.cbx_lock_in_channel.addItem(port[1])
+        if self.cbx_lock_in_input.currentText()=='AG34410A':
+            for i in range(self.cbx_lock_in_channel.count()):
+                self.cbx_lock_in_channel.removeItem(i)             
+                 
+    def pre_run_check(self):
+        self.pb_start.setEnabled( False )
+        #Comprobar si todos los campos obligatorios fueron correctamente completados.
+        # Comprueba que el campo de arhivo no este vacío.
+        if self.le_output_file_path.text() != '': 
+            pass
         else:
             self.pb_start.setEnabled( True )
             self.statusBar().showMessage( 'El campo que indica el archivo de destino no puede estar vacio' )
+            return False
+        # Comprobar que no se haya seleccionado el mismo equipo para las dos variables
+        # FIXME: Lo correcto seria que el usuario no pueda seleccionar los mismos dispositivos para las dos Variables.
+        if self.cbx_lock_in_channel.currentText() == self.cbx_temperature_sample_channel.currentText():
+            self.pb_start.setEnabled( True )
+            self.statusBar().showMessage( 'No se puede utilizar el mismo dispositivo para las dos variables' )
+            return False
+        # Comprobar conectividad con dispositivos configurados.
+        
+        return True
+    
+    def Resistividad_test ( self ):
+        # inicializar archivos leer configuraciones inicializar puerto serie
+        valid = self.pre_run_check()
         if valid:
-            self.pb_start.setEnabled( False )
+            self.pb_start_save_data.setEnabled(True)
+            
             outfile = self.le_output_file_path.text()
             outfile += '.txt'
-            lock_in_sensitivity=self.dsbx_lock_in_sensitivity.value()
             header = 'Comentarios:' + self.ptx_header.toPlainText() + '\n'
-            header += 'Lock in sensitivity: ' + str ( self.dsbx_lock_in_sensitivity.value() ) + '\n'
-
             header += 'Dispositivos y canales utilizados: \n'
-
-            header += '\t Temperatura de la muestra: ' + str ( self.cbx_temperature_sample_input.currentText() ) + '\n'
-            if self.cbx_temperature_sample_input.currentText() != 'USB TEMP AI':
-                pass
-            else:
-                header += '\t\t Canal: ' + str ( self.cbx_temperature_sample_channel.currentText() ) + '\n'        
+            header += '\t Temperatura de la muestra: ' + str ( self.cbx_temperature_sample_input.currentText() ) + '\n'     
             header += '\t Lock-In: ' + str ( self.cbx_lock_in_input.currentText() ) + '\n'
-            header += '\t\t Canal: ' + str ( self.cbx_lock_in_channel.currentText() ) + '\n'
-
             header += '\n Datos por segundo: ' + str ( self.sb_data_per_second.value() ) + '\n\n'
-            header += 'Tiempo (s) \t T muestra (C) \t Lock-in (mV o uV) \n'
-
+            header += 'Tiempo (s) \t T muestra (C) \t Lock-in (V) \n'
+            
             self.comented_header = ''
             for line in header.split( '\n' ):
                 self.comented_header = self.comented_header + self.le_output_file_commentchar.text() + line + '\n'
-
-            if self.cbx_temperature_sample_input.currentText() != 'USB TEMP AI':
                 
-                multimeter = self.cbx_temperature_sample_input.currentText()
-                if self.cbx_temperature_sample_input.currentText()=='AG34401A':
-                    s_port=self.cbx_temperature_sample_channel.currentText()
-                usb_temp_ai_temp_channels=False
-
-            else:
-                multimeter = False
-                s_port=False
-                usb_temp_ai_temp_channels = [int ( self.cbx_temperature_sample_channel.currentText() )]
-                
-            usb_temp_ai_volt_channels = [int ( self.cbx_lock_in_channel.currentText() )]
-
+            temp= [self.cbx_temperature_sample_input.currentText(), str(self.cbx_temperature_sample_channel.currentText())]
+            lock_in= [str(self.cbx_lock_in_input.currentText()), str(self.cbx_lock_in_channel.currentText())]
+            #print lock_in
             self.resistividad.test( outfile,
-                                    lock_in_sensitivity,
-                                    multimeter,
-                                    usb_temp_ai_temp_channels,
-                                    usb_temp_ai_volt_channels,
                                     self.sb_data_per_second.value(),
-                                    self.sb_board_num.value(),
-                                    s_port )
+                                    lock_in,
+                                    temp
+                                     )
             self.count = 0
             self.pb_normalizar.setEnabled( True )
             self.pb_end.setEnabled( True )
@@ -486,7 +445,11 @@ class Main( QtGui.QMainWindow ):
     @QtCore.pyqtSlot ()
     
     def show_data ( self, data ):
+        lock_in_sensitivity=data
+        self.lb_lock_in_sensitivity_unit.setText(lock_in_sensitivity[1])
+        self.lcd_lock_in_sensitivity.display(str(lock_in_sensitivity[0]))
         del data
+
         if self.read_data:
             
             f = open( self.le_output_file_path.text() + '.txt' )
@@ -500,7 +463,7 @@ class Main( QtGui.QMainWindow ):
                                                              dtype = float,
                                                              autostrip = True,
                                                              unpack = True )
-            print [time_np[-1], temp_sample[-1], lock_in[-1]]
+            #print [time_np[-1], temp_sample[-1], lock_in[-1]]
             if time_np[-1] < 60:
                 self.lcd_time_second.display( str ( int (time_np[-1] ) ) )
             else:
@@ -517,13 +480,13 @@ class Main( QtGui.QMainWindow ):
                     self.lcd_time_hour.display( str ( int ( h ) ) )
 
             if self.norm_lock_in:  # Si esta normalizado nos muestra el lockin normalizado  
-                self.lcd_var_2.display( str (float(lock_in[-1])/float(self.norm_lock_in) ))
+                self.lcd_var_2.display( str (float(lock_in[-1])/float(self.norm_lock_in)))
             else: # Si no esta normalizado nos muestra simplente el lockin
                 self.lcd_var_2.display( str ( lock_in[-1] ))
 
-            self.lcd_var_5.display( str(float ( lock_in[-1] ))) # Nos muestra el lockin sin normalizar en mV o uV
-            
-            self.lcd_var_3.display( str ( float(lock_in[-1])*10 / float (self.dsbx_lock_in_sensitivity.value()) ) ) # Muestra el lock-in en Voltios. 
+            #self.lcd_var_5.display( str ( float ( lock_in[-1] )*lock_in_sensitivity[2] ) ) # Nos muestra el lockin sin normalizar en mV o uV
+            self.lcd_var_3.display( str ( float ( lock_in[-1] )*lock_in_sensitivity[2] ) ) # Muestra el lock-in en Voltios. 
+
 
 
 ##==============================IMPORTANTE !!!!=========================================
@@ -546,8 +509,9 @@ class Main( QtGui.QMainWindow ):
             self.maincanvas.axes.cla()
             self.maincanvas.axes.grid( True )
             self.statusBar().showMessage( 'Ploteando principal...' )
-            self.maincanvas.axes.set_xlim( self.sb_xmin.value(), self.sb_xmax.value() )
-            self.maincanvas.axes.set_ylim( self.sb_ymin.value(), self.sb_ymax.value() )            
+            self.maincanvas.axes.axis(self.maincanvas.axes.axis())
+            #self.maincanvas.axes.set_xlim( self.sb_xmin.value(), self.sb_xmax.value() )
+            #self.maincanvas.axes.set_ylim( self.sb_ymin.value(), self.sb_ymax.value() )            
             self.maincanvas.axes.plot( temp_sample, lock_in, 'og' )
             
             for label in self.maincanvas.axes.get_xticklabels():
@@ -637,10 +601,11 @@ class Main( QtGui.QMainWindow ):
 
             data = np.genfromtxt( s,
                                   deletechars = "\n",
+                                  usecols=(0,1,2),
                                   dtype = float,
                                   autostrip = True,
                                   unpack = True )
-            print data
+            #print data
             if data[0] < 60:
                 self.lcd_time_second.display( str ( int (data[0] ) ) )
             else:
@@ -658,11 +623,11 @@ class Main( QtGui.QMainWindow ):
             if self.norm_lock_in:
                 mostrame = data[2]/self.norm_lock_in
                 self.lcd_var_2.display( str (mostrame))
-
             else:
                 self.lcd_var_2.display( str (  float ( data[2] ) ))
-            self.lcd_var_3.display( str ( float ( data[2])*10/ float (self.dsbx_lock_in_sensitivity.value() )))
-            self.lcd_var_5.display( str ( float ( data[2])))
+                     
+            #self.lcd_var_5.display( str ( float ( data[2] )*lock_in_sensitivity[3] )) # Nos muestra el lockin sin normalizar en mV o uV
+            self.lcd_var_3.display( str ( float ( data[2] )*lock_in_sensitivity[2] )) # Muestra el lock-in en Voltios. 
             self.lcd_temperature_sample.display( str ( data[1] ) )
 
 def main():

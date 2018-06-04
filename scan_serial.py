@@ -50,12 +50,13 @@ def scan(num_ports = 20, verbose=True):
     
         try:
             #-- Abrir puerto serie
-            s = serial.Serial(i)
+            sport='COM'+str(i)
+            s = serial.Serial(sport)
         
             if verbose: print "OK --> %s" % s.portstr
         
             #-- Si no hay errores, anadir el numero y nombre a la lista
-            dispositivos_serie.append( (i, s.portstr))
+            dispositivos_serie.append( (sport, s.portstr))
         
             #-- Cerrar puerto
             s.close()
