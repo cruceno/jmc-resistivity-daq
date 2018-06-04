@@ -1,0 +1,1077 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1120</width>
+    <height>707</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QGridLayout" name="gridLayout_5">
+    <item row="0" column="0">
+     <widget class="QTabWidget" name="tabmainwidget">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <widget class="QWidget" name="tab_output_config">
+       <attribute name="title">
+        <string>Configuracion de Salida</string>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout_6">
+        <item row="1" column="0" rowspan="3">
+         <widget class="QGroupBox" name="gb_input_config">
+          <property name="minimumSize">
+           <size>
+            <width>321</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="title">
+           <string>Dispositivos de entrada</string>
+          </property>
+          <property name="checkable">
+           <bool>false</bool>
+          </property>
+          <property name="checked">
+           <bool>false</bool>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_3">
+           <item row="0" column="1">
+            <widget class="QComboBox" name="cbx_temperature_sample_input">
+             <item>
+              <property name="text">
+               <string>AG34401A</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>AG34410A</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>USB TEMP AI</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item row="0" column="2">
+            <widget class="QComboBox" name="cbx_temperature_sample_channel">
+             <property name="enabled">
+              <bool>true</bool>
+             </property>
+             <property name="currentIndex">
+              <number>-1</number>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <widget class="QLabel" name="lb_dilatometer_termperature_input_2">
+             <property name="text">
+              <string>Temperatura muestra</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QComboBox" name="cbx_lock_in_input">
+             <item>
+              <property name="text">
+               <string>USB TEMP AI</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>AG_34401A</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>AG_34405A</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>AG_34410A</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item row="1" column="2">
+            <widget class="QComboBox" name="cbx_lock_in_channel">
+             <property name="currentIndex">
+              <number>1</number>
+             </property>
+             <item>
+              <property name="text">
+               <string>0</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>1</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>2</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>3</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string/>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="label">
+             <property name="text">
+              <string>Lock - In</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+          <zorder>cbx_lock_in_input</zorder>
+          <zorder>cbx_lock_in_channel</zorder>
+          <zorder>lb_dilatometer_termperature_input_2</zorder>
+          <zorder>cbx_temperature_sample_input</zorder>
+          <zorder>cbx_temperature_sample_channel</zorder>
+          <zorder>label</zorder>
+         </widget>
+        </item>
+        <item row="0" column="0" colspan="5">
+         <widget class="QGroupBox" name="gb_output_file">
+          <property name="title">
+           <string>Archivo de Salida</string>
+          </property>
+          <property name="checkable">
+           <bool>false</bool>
+          </property>
+          <property name="checked">
+           <bool>false</bool>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_8">
+           <item row="0" column="1" colspan="3">
+            <widget class="QLineEdit" name="le_output_file_path">
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <widget class="QLabel" name="lb_output_file_path">
+             <property name="text">
+              <string>Ruta</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="3">
+            <widget class="QLineEdit" name="le_output_file_commentchar">
+             <property name="text">
+              <string>%</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="4">
+            <widget class="QToolButton" name="tlb_output_file_path">
+             <property name="text">
+              <string>...</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0" colspan="3">
+            <widget class="QLabel" name="lb_output_file_commentchar">
+             <property name="text">
+              <string>Caracter de comentario</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0" colspan="5">
+            <widget class="QGroupBox" name="gb_footer">
+             <property name="title">
+              <string>Pie de pagina</string>
+             </property>
+             <layout class="QGridLayout" name="gridLayout_16">
+              <item row="0" column="0">
+               <widget class="QPlainTextEdit" name="ptx_footer"/>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item row="2" column="0" colspan="5">
+            <widget class="QGroupBox" name="gb_header">
+             <property name="title">
+              <string>Encabezado</string>
+             </property>
+             <layout class="QGridLayout" name="gridLayout_14">
+              <item row="0" column="0">
+               <widget class="QPlainTextEdit" name="ptx_header"/>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item row="1" column="4">
+            <spacer name="horizontalSpacer_3">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="1" column="1" rowspan="3">
+         <widget class="QGroupBox" name="groupBox">
+          <property name="title">
+           <string>Lock -In</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_4">
+           <item row="0" column="1">
+            <widget class="QDoubleSpinBox" name="dsbx_lock_in_sensitivity">
+             <property name="decimals">
+              <number>0</number>
+             </property>
+             <property name="minimum">
+              <double>1.000000000000000</double>
+             </property>
+             <property name="maximum">
+              <double>500.000000000000000</double>
+             </property>
+             <property name="singleStep">
+              <double>1.000000000000000</double>
+             </property>
+             <property name="value">
+              <double>50.000000000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_3">
+             <property name="text">
+              <string>Sensitivity</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="1" column="3">
+         <widget class="QSpinBox" name="sb_data_per_second">
+          <property name="minimum">
+           <number>1</number>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="2">
+         <widget class="QLabel" name="label_9">
+          <property name="text">
+           <string>Datos por segundo</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="2">
+         <widget class="QLabel" name="label_10">
+          <property name="text">
+           <string>BoardNum</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="4" rowspan="3">
+         <spacer name="horizontalSpacer_2">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>687</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item row="2" column="3">
+         <widget class="QSpinBox" name="sb_board_num">
+          <property name="value">
+           <number>0</number>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tab_plots">
+       <attribute name="title">
+        <string>Graficas</string>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout_9">
+        <item row="0" column="0" rowspan="2" colspan="2">
+         <widget class="QGroupBox" name="gb_auxplot_1">
+          <property name="minimumSize">
+           <size>
+            <width>247</width>
+            <height>181</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>300</width>
+            <height>205</height>
+           </size>
+          </property>
+          <property name="title">
+           <string>Resistencia / Tiempo</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="2">
+         <spacer name="horizontalSpacer_4">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>203</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item row="0" column="3">
+         <widget class="QGroupBox" name="groupBox_2">
+          <property name="minimumSize">
+           <size>
+            <width>151</width>
+            <height>81</height>
+           </size>
+          </property>
+          <property name="title">
+           <string>Velocidad  temp. (C / min)</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout">
+           <item row="0" column="0">
+            <widget class="QLCDNumber" name="lcd_var_4">
+             <property name="minimumSize">
+              <size>
+               <width>121</width>
+               <height>48</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>121</width>
+               <height>48</height>
+              </size>
+             </property>
+             <property name="smallDecimalPoint">
+              <bool>true</bool>
+             </property>
+             <property name="numDigits">
+              <number>4</number>
+             </property>
+             <property name="digitCount">
+              <number>4</number>
+             </property>
+             <property name="segmentStyle">
+              <enum>QLCDNumber::Flat</enum>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="0" column="4" colspan="2">
+         <widget class="QGroupBox" name="groupBox_4">
+          <property name="minimumSize">
+           <size>
+            <width>131</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="palette">
+           <palette>
+            <active>
+             <colorrole role="Base">
+              <brush brushstyle="SolidPattern">
+               <color alpha="255">
+                <red>255</red>
+                <green>255</green>
+                <blue>255</blue>
+               </color>
+              </brush>
+             </colorrole>
+             <colorrole role="Window">
+              <brush brushstyle="SolidPattern">
+               <color alpha="255">
+                <red>255</red>
+                <green>255</green>
+                <blue>0</blue>
+               </color>
+              </brush>
+             </colorrole>
+            </active>
+            <inactive>
+             <colorrole role="Base">
+              <brush brushstyle="SolidPattern">
+               <color alpha="255">
+                <red>255</red>
+                <green>255</green>
+                <blue>255</blue>
+               </color>
+              </brush>
+             </colorrole>
+             <colorrole role="Window">
+              <brush brushstyle="SolidPattern">
+               <color alpha="255">
+                <red>255</red>
+                <green>255</green>
+                <blue>0</blue>
+               </color>
+              </brush>
+             </colorrole>
+            </inactive>
+            <disabled>
+             <colorrole role="Base">
+              <brush brushstyle="SolidPattern">
+               <color alpha="255">
+                <red>255</red>
+                <green>255</green>
+                <blue>0</blue>
+               </color>
+              </brush>
+             </colorrole>
+             <colorrole role="Window">
+              <brush brushstyle="SolidPattern">
+               <color alpha="255">
+                <red>255</red>
+                <green>255</green>
+                <blue>0</blue>
+               </color>
+              </brush>
+             </colorrole>
+            </disabled>
+           </palette>
+          </property>
+          <property name="title">
+           <string>Lock - In (mV o uV)</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_7">
+           <item row="0" column="0">
+            <widget class="QLCDNumber" name="lcd_var_5">
+             <property name="minimumSize">
+              <size>
+               <width>121</width>
+               <height>48</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>121</width>
+               <height>48</height>
+              </size>
+             </property>
+             <property name="palette">
+              <palette>
+               <active>
+                <colorrole role="Base">
+                 <brush brushstyle="SolidPattern">
+                  <color alpha="255">
+                   <red>255</red>
+                   <green>255</green>
+                   <blue>255</blue>
+                  </color>
+                 </brush>
+                </colorrole>
+                <colorrole role="Window">
+                 <brush brushstyle="SolidPattern">
+                  <color alpha="255">
+                   <red>255</red>
+                   <green>255</green>
+                   <blue>0</blue>
+                  </color>
+                 </brush>
+                </colorrole>
+               </active>
+               <inactive>
+                <colorrole role="Base">
+                 <brush brushstyle="SolidPattern">
+                  <color alpha="255">
+                   <red>255</red>
+                   <green>255</green>
+                   <blue>255</blue>
+                  </color>
+                 </brush>
+                </colorrole>
+                <colorrole role="Window">
+                 <brush brushstyle="SolidPattern">
+                  <color alpha="255">
+                   <red>255</red>
+                   <green>255</green>
+                   <blue>0</blue>
+                  </color>
+                 </brush>
+                </colorrole>
+               </inactive>
+               <disabled>
+                <colorrole role="Base">
+                 <brush brushstyle="SolidPattern">
+                  <color alpha="255">
+                   <red>255</red>
+                   <green>255</green>
+                   <blue>0</blue>
+                  </color>
+                 </brush>
+                </colorrole>
+                <colorrole role="Window">
+                 <brush brushstyle="SolidPattern">
+                  <color alpha="255">
+                   <red>255</red>
+                   <green>255</green>
+                   <blue>0</blue>
+                  </color>
+                 </brush>
+                </colorrole>
+               </disabled>
+              </palette>
+             </property>
+             <property name="smallDecimalPoint">
+              <bool>true</bool>
+             </property>
+             <property name="numDigits">
+              <number>4</number>
+             </property>
+             <property name="digitCount">
+              <number>4</number>
+             </property>
+             <property name="segmentStyle">
+              <enum>QLCDNumber::Flat</enum>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="0" column="6">
+         <widget class="QGroupBox" name="gb_var_2">
+          <property name="minimumSize">
+           <size>
+            <width>141</width>
+            <height>81</height>
+           </size>
+          </property>
+          <property name="title">
+           <string>R / Ro</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_11">
+           <item row="0" column="0">
+            <widget class="QLCDNumber" name="lcd_var_2">
+             <property name="minimumSize">
+              <size>
+               <width>121</width>
+               <height>48</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>121</width>
+               <height>48</height>
+              </size>
+             </property>
+             <property name="smallDecimalPoint">
+              <bool>true</bool>
+             </property>
+             <property name="numDigits">
+              <number>4</number>
+             </property>
+             <property name="digitCount">
+              <number>4</number>
+             </property>
+             <property name="segmentStyle">
+              <enum>QLCDNumber::Flat</enum>
+             </property>
+             <property name="value" stdset="0">
+              <double>0.000000000000000</double>
+             </property>
+             <property name="intValue" stdset="0">
+              <number>0</number>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="0" column="7">
+         <widget class="QGroupBox" name="gb_var_3">
+          <property name="minimumSize">
+           <size>
+            <width>141</width>
+            <height>81</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>141</width>
+            <height>81</height>
+           </size>
+          </property>
+          <property name="title">
+           <string>Lock - In  (V)</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_12">
+           <item row="0" column="0">
+            <widget class="QLCDNumber" name="lcd_var_3">
+             <property name="minimumSize">
+              <size>
+               <width>121</width>
+               <height>48</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>121</width>
+               <height>48</height>
+              </size>
+             </property>
+             <property name="smallDecimalPoint">
+              <bool>true</bool>
+             </property>
+             <property name="numDigits">
+              <number>3</number>
+             </property>
+             <property name="digitCount">
+              <number>3</number>
+             </property>
+             <property name="segmentStyle">
+              <enum>QLCDNumber::Flat</enum>
+             </property>
+             <property name="value" stdset="0">
+              <double>0.000000000000000</double>
+             </property>
+             <property name="intValue" stdset="0">
+              <number>0</number>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="1" column="2" rowspan="3" colspan="7">
+         <widget class="QGroupBox" name="gb_mainplot">
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>401</height>
+           </size>
+          </property>
+          <property name="contextMenuPolicy">
+           <enum>Qt::NoContextMenu</enum>
+          </property>
+          <property name="title">
+           <string>Resistencia / Temperatura de la muestra</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0" colspan="2">
+         <widget class="QGroupBox" name="gb_auxplot_2">
+          <property name="minimumSize">
+           <size>
+            <width>247</width>
+            <height>181</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>300</width>
+            <height>181</height>
+           </size>
+          </property>
+          <property name="title">
+           <string>Temperatura / Tiempo</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="0" rowspan="2" colspan="2">
+         <widget class="QGroupBox" name="groupBox_3">
+          <property name="minimumSize">
+           <size>
+            <width>241</width>
+            <height>171</height>
+           </size>
+          </property>
+          <property name="title">
+           <string>Temperatura</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_2">
+           <item row="0" column="0">
+            <widget class="QLCDNumber" name="lcd_temperature_sample">
+             <property name="palette">
+              <palette>
+               <active>
+                <colorrole role="Base">
+                 <brush brushstyle="SolidPattern">
+                  <color alpha="255">
+                   <red>255</red>
+                   <green>255</green>
+                   <blue>255</blue>
+                  </color>
+                 </brush>
+                </colorrole>
+                <colorrole role="Window">
+                 <brush brushstyle="SolidPattern">
+                  <color alpha="255">
+                   <red>0</red>
+                   <green>255</green>
+                   <blue>0</blue>
+                  </color>
+                 </brush>
+                </colorrole>
+               </active>
+               <inactive>
+                <colorrole role="Base">
+                 <brush brushstyle="SolidPattern">
+                  <color alpha="255">
+                   <red>255</red>
+                   <green>255</green>
+                   <blue>255</blue>
+                  </color>
+                 </brush>
+                </colorrole>
+                <colorrole role="Window">
+                 <brush brushstyle="SolidPattern">
+                  <color alpha="255">
+                   <red>0</red>
+                   <green>255</green>
+                   <blue>0</blue>
+                  </color>
+                 </brush>
+                </colorrole>
+               </inactive>
+               <disabled>
+                <colorrole role="Base">
+                 <brush brushstyle="SolidPattern">
+                  <color alpha="255">
+                   <red>0</red>
+                   <green>255</green>
+                   <blue>0</blue>
+                  </color>
+                 </brush>
+                </colorrole>
+                <colorrole role="Window">
+                 <brush brushstyle="SolidPattern">
+                  <color alpha="255">
+                   <red>0</red>
+                   <green>255</green>
+                   <blue>0</blue>
+                  </color>
+                 </brush>
+                </colorrole>
+               </disabled>
+              </palette>
+             </property>
+             <property name="font">
+              <font>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="autoFillBackground">
+              <bool>true</bool>
+             </property>
+             <property name="smallDecimalPoint">
+              <bool>true</bool>
+             </property>
+             <property name="numDigits">
+              <number>4</number>
+             </property>
+             <property name="digitCount">
+              <number>4</number>
+             </property>
+             <property name="segmentStyle">
+              <enum>QLCDNumber::Flat</enum>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="4" column="2" rowspan="2" colspan="3">
+         <widget class="QGroupBox" name="gb_scale_mainplot_controls">
+          <property name="minimumSize">
+           <size>
+            <width>316</width>
+            <height>81</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>316</width>
+            <height>81</height>
+           </size>
+          </property>
+          <property name="title">
+           <string>Scale Main Graph</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_15">
+           <item row="0" column="0">
+            <widget class="QLabel" name="lb_x_min">
+             <property name="text">
+              <string>xMin</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="2">
+            <widget class="QLabel" name="lb_x_max">
+             <property name="text">
+              <string>xMax</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="lb_y_min">
+             <property name="text">
+              <string>yMin</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="2">
+            <widget class="QLabel" name="lb_y_max">
+             <property name="text">
+              <string>yMax</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QDoubleSpinBox" name="sb_ymin">
+             <property name="decimals">
+              <number>4</number>
+             </property>
+             <property name="minimum">
+              <double>0.000000000000000</double>
+             </property>
+             <property name="maximum">
+              <double>499.000000000000000</double>
+             </property>
+             <property name="singleStep">
+              <double>1.000000000000000</double>
+             </property>
+             <property name="value">
+              <double>1.000000000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="3">
+            <widget class="QDoubleSpinBox" name="sb_ymax">
+             <property name="decimals">
+              <number>4</number>
+             </property>
+             <property name="minimum">
+              <double>0.000000000000000</double>
+             </property>
+             <property name="maximum">
+              <double>500.000000000000000</double>
+             </property>
+             <property name="singleStep">
+              <double>1.000000000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QDoubleSpinBox" name="sb_xmin">
+             <property name="minimum">
+              <double>-500.000000000000000</double>
+             </property>
+             <property name="maximum">
+              <double>499.000000000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="3">
+            <widget class="QDoubleSpinBox" name="sb_xmax">
+             <property name="minimum">
+              <double>-450.000000000000000</double>
+             </property>
+             <property name="maximum">
+              <double>500.000000000000000</double>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="4" column="5" rowspan="2" colspan="2">
+         <widget class="QGroupBox" name="gb_time">
+          <property name="minimumSize">
+           <size>
+            <width>201</width>
+            <height>81</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>201</width>
+            <height>81</height>
+           </size>
+          </property>
+          <property name="title">
+           <string>Tiempo de ensayo</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_13">
+           <item row="0" column="0">
+            <widget class="QLCDNumber" name="lcd_time_hour">
+             <property name="smallDecimalPoint">
+              <bool>false</bool>
+             </property>
+             <property name="numDigits">
+              <number>2</number>
+             </property>
+             <property name="digitCount">
+              <number>2</number>
+             </property>
+             <property name="segmentStyle">
+              <enum>QLCDNumber::Flat</enum>
+             </property>
+             <property name="value" stdset="0">
+              <double>0.000000000000000</double>
+             </property>
+             <property name="intValue" stdset="0">
+              <number>0</number>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QLCDNumber" name="lcd_time_minute">
+             <property name="numDigits">
+              <number>2</number>
+             </property>
+             <property name="digitCount">
+              <number>2</number>
+             </property>
+             <property name="segmentStyle">
+              <enum>QLCDNumber::Flat</enum>
+             </property>
+             <property name="intValue" stdset="0">
+              <number>0</number>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="2">
+            <widget class="QLCDNumber" name="lcd_time_second">
+             <property name="numDigits">
+              <number>2</number>
+             </property>
+             <property name="segmentStyle">
+              <enum>QLCDNumber::Flat</enum>
+             </property>
+             <property name="intValue" stdset="0">
+              <number>0</number>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="5" column="0">
+         <widget class="QPushButton" name="pb_start">
+          <property name="text">
+           <string>Comenzar</string>
+          </property>
+          <property name="iconSize">
+           <size>
+            <width>40</width>
+            <height>40</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="1">
+         <widget class="QPushButton" name="pb_normalizar">
+          <property name="enabled">
+           <bool>true</bool>
+          </property>
+          <property name="text">
+           <string>Normalizar</string>
+          </property>
+         </widget>
+        </item>
+        <item row="6" column="0">
+         <widget class="QPushButton" name="pb_start_save_data">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="text">
+           <string>Iniciar registro de datos</string>
+          </property>
+          <property name="iconSize">
+           <size>
+            <width>40</width>
+            <height>40</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+        <item row="6" column="1">
+         <widget class="QPushButton" name="pb_end">
+          <property name="text">
+           <string>Finalizar</string>
+          </property>
+          <property name="iconSize">
+           <size>
+            <width>40</width>
+            <height>40</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+        <item row="6" column="7" colspan="2">
+         <spacer name="horizontalSpacer">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>389</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1120</width>
+     <height>21</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
